@@ -1,0 +1,1236 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>别再收藏了 - AI 信息流行动卡 Demo</title>
+  <style>
+    :root {
+      --bg: #050507;
+      --phone: #0b0b0f;
+      --panel: rgba(18, 18, 22, 0.88);
+      --panel-strong: rgba(28, 29, 34, 0.96);
+      --line: rgba(255, 255, 255, 0.13);
+      --text: #f4f5f7;
+      --muted: #a1a5ad;
+      --soft: #d4d7dd;
+      --cyan: #18f5dc;
+      --red: #ff356e;
+      --yellow: #ffd166;
+      --green: #7ce38b;
+      --shadow: 0 28px 80px rgba(0, 0, 0, 0.46);
+      --radius: 8px;
+      --ease: cubic-bezier(0.2, 0.9, 0.2, 1);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      min-height: 100%;
+      margin: 0;
+      background:
+        radial-gradient(circle at 18% 22%, rgba(24, 245, 220, 0.12), transparent 26%),
+        radial-gradient(circle at 78% 72%, rgba(255, 53, 110, 0.12), transparent 30%),
+        #050507;
+      color: var(--text);
+      font-family: "Microsoft YaHei UI", "Microsoft YaHei", "PingFang SC", "Noto Sans SC", "Segoe UI", sans-serif;
+      letter-spacing: 0;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      overflow-x: hidden;
+    }
+
+    button {
+      font: inherit;
+    }
+
+    .stage {
+      width: min(1120px, 100%);
+      min-height: min(760px, calc(100vh - 48px));
+      display: grid;
+      grid-template-columns: minmax(310px, 390px) minmax(320px, 1fr);
+      gap: 34px;
+      align-items: center;
+    }
+
+    .phone {
+      position: relative;
+      width: min(390px, 100%);
+      aspect-ratio: 9 / 19.5;
+      margin: 0 auto;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      border-radius: 34px;
+      background: #08080b;
+      box-shadow: var(--shadow), inset 0 0 0 8px #111117;
+      overflow: hidden;
+    }
+
+    .phone::before {
+      content: "";
+      position: absolute;
+      z-index: 6;
+      top: 10px;
+      left: 50%;
+      width: 112px;
+      height: 25px;
+      transform: translateX(-50%);
+      border-radius: 0 0 18px 18px;
+      background: #050507;
+    }
+
+    .feed {
+      position: absolute;
+      inset: 8px;
+      border-radius: 27px;
+      overflow: hidden;
+      background: var(--phone);
+    }
+
+    .video-layer {
+      position: absolute;
+      inset: 0;
+      transition: transform 520ms var(--ease), opacity 360ms ease-out, filter 360ms ease-out;
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.34) 44%, rgba(0, 0, 0, 0.78)),
+        linear-gradient(135deg, #17212c 0%, #0e1014 48%, #21131a 100%);
+    }
+
+    .video-layer.alt {
+      transform: translateY(100%);
+      background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.08), rgba(0, 0, 0, 0.46) 54%, rgba(0, 0, 0, 0.82)),
+        linear-gradient(145deg, #251f16 0%, #101318 46%, #12241d 100%);
+    }
+
+    .feed[data-step="stack"] .video-layer.main,
+    .feed[data-step="card"] .video-layer.main,
+    .feed[data-step="task"] .video-layer.main,
+    .feed[data-step="scenes"] .video-layer.main {
+      transform: translateY(-100%);
+      opacity: 0;
+    }
+
+    .feed[data-step="stack"] .video-layer.alt,
+    .feed[data-step="card"] .video-layer.alt,
+    .feed[data-step="task"] .video-layer.alt,
+    .feed[data-step="scenes"] .video-layer.alt {
+      transform: translateY(0);
+    }
+
+    .feed[data-step="card"] .video-layer.alt,
+    .feed[data-step="task"] .video-layer.alt,
+    .feed[data-step="scenes"] .video-layer.alt {
+      filter: blur(3px) brightness(0.7);
+    }
+
+    .video-art {
+      position: absolute;
+      inset: 74px 32px 190px 32px;
+      display: grid;
+      align-content: center;
+      justify-items: start;
+      gap: 12px;
+    }
+
+    .video-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 28px;
+      padding: 0 10px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      border-radius: 999px;
+      color: var(--soft);
+      background: rgba(255, 255, 255, 0.08);
+      font-size: 12px;
+    }
+
+    .video-title-big {
+      width: min(260px, 100%);
+      margin: 0;
+      color: #fff;
+      font-size: 39px;
+      line-height: 1.08;
+      font-weight: 900;
+    }
+
+    .video-title-big span {
+      color: var(--cyan);
+    }
+
+    .subtitle-line {
+      width: 220px;
+      color: #d8dce2;
+      font-size: 15px;
+      line-height: 1.7;
+    }
+
+    .caption {
+      position: absolute;
+      left: 18px;
+      right: 82px;
+      bottom: 26px;
+      z-index: 4;
+      display: grid;
+      gap: 8px;
+      transition: opacity 260ms ease-out, transform 260ms ease-out;
+    }
+
+    .feed[data-step="card"] .caption,
+    .feed[data-step="task"] .caption,
+    .feed[data-step="scenes"] .caption {
+      opacity: 0;
+      transform: translateY(16px);
+      pointer-events: none;
+    }
+
+    .author {
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    .desc {
+      margin: 0;
+      color: #f1f2f4;
+      font-size: 14px;
+      line-height: 1.45;
+    }
+
+    .music {
+      color: var(--muted);
+      font-size: 12px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .rail {
+      position: absolute;
+      right: 13px;
+      bottom: 88px;
+      z-index: 5;
+      display: grid;
+      gap: 15px;
+      justify-items: center;
+    }
+
+    .rail-button {
+      width: 49px;
+      min-height: 58px;
+      display: grid;
+      justify-items: center;
+      gap: 4px;
+      border: 0;
+      background: transparent;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .rail-icon {
+      width: 43px;
+      height: 43px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(0, 0, 0, 0.26);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      font-size: 21px;
+      transition: transform 180ms ease-out, background 180ms ease-out, color 180ms ease-out;
+    }
+
+    .rail-label {
+      font-size: 10px;
+      color: #f5f5f6;
+    }
+
+    .rail-button:hover .rail-icon,
+    .rail-button:focus-visible .rail-icon {
+      transform: translateY(-2px) scale(1.04);
+      background: rgba(255, 255, 255, 0.16);
+    }
+
+    .rail-button.saved .rail-icon {
+      color: var(--yellow);
+      background: rgba(255, 209, 102, 0.16);
+      border-color: rgba(255, 209, 102, 0.55);
+    }
+
+    .toast {
+      position: absolute;
+      left: 50%;
+      bottom: 122px;
+      z-index: 8;
+      width: max-content;
+      max-width: calc(100% - 52px);
+      padding: 10px 13px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: rgba(12, 12, 15, 0.82);
+      color: #fff;
+      font-size: 13px;
+      transform: translate(-50%, 20px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 220ms ease-out, transform 220ms ease-out;
+      backdrop-filter: blur(12px);
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    .stack-overlay {
+      position: absolute;
+      inset: 58px 18px 92px;
+      z-index: 4;
+      display: grid;
+      align-content: end;
+      gap: 14px;
+      opacity: 0;
+      transform: translateY(18px);
+      pointer-events: none;
+      transition: opacity 280ms ease-out, transform 280ms ease-out;
+    }
+
+    .feed[data-step="stack"] .stack-overlay {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
+
+    .mini-video-list {
+      display: grid;
+      gap: 8px;
+    }
+
+    .mini-video {
+      min-height: 46px;
+      display: grid;
+      grid-template-columns: 42px 1fr auto;
+      align-items: center;
+      gap: 10px;
+      padding: 8px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius);
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      font-size: 13px;
+      animation: rise 520ms var(--ease) both;
+    }
+
+    .mini-video:nth-child(2) {
+      animation-delay: 80ms;
+    }
+
+    .mini-video:nth-child(3) {
+      animation-delay: 160ms;
+    }
+
+    .mini-video:nth-child(4) {
+      animation-delay: 240ms;
+    }
+
+    .mini-thumb {
+      height: 42px;
+      border-radius: 6px;
+      background:
+        linear-gradient(135deg, rgba(24, 245, 220, 0.55), rgba(255, 53, 110, 0.38)),
+        #24262d;
+    }
+
+    .mini-tag {
+      color: var(--yellow);
+      font-size: 12px;
+    }
+
+    .stats-panel {
+      padding: 16px;
+      border: 1px solid rgba(24, 245, 220, 0.34);
+      border-radius: var(--radius);
+      background: rgba(8, 8, 11, 0.78);
+      box-shadow: 0 18px 42px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(18px);
+    }
+
+    .stats-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 12px;
+      color: var(--cyan);
+      font-weight: 900;
+      font-size: 16px;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+
+    .stat {
+      min-height: 62px;
+      display: grid;
+      align-content: center;
+      gap: 3px;
+      padding: 10px;
+      border-radius: 7px;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .stat strong {
+      font-size: 22px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 12px;
+    }
+
+    .ai-card-wrap {
+      position: absolute;
+      inset: 66px 16px 74px;
+      z-index: 7;
+      display: grid;
+      align-items: center;
+      opacity: 0;
+      transform: translateY(26px) scale(0.98);
+      pointer-events: none;
+      transition: opacity 360ms ease-out, transform 420ms var(--ease);
+    }
+
+    .feed[data-step="card"] .ai-card-wrap,
+    .feed[data-step="task"] .ai-card-wrap,
+    .feed[data-step="scenes"] .ai-card-wrap {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+      pointer-events: auto;
+    }
+
+    .ai-card {
+      position: relative;
+      overflow: hidden;
+      padding: 22px 18px 18px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 12px;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.03)),
+        rgba(12, 12, 16, 0.88);
+      box-shadow: 0 24px 70px rgba(0, 0, 0, 0.48);
+      backdrop-filter: blur(22px);
+    }
+
+    .ai-card::before {
+      content: "";
+      position: absolute;
+      inset: 0 0 auto;
+      height: 3px;
+      background: linear-gradient(90deg, var(--cyan), var(--red));
+    }
+
+    .ai-kicker {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      margin-bottom: 16px;
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .live-dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 6px rgba(24, 245, 220, 0.12);
+    }
+
+    .ai-card h1 {
+      margin: 0 0 8px;
+      font-size: 34px;
+      line-height: 1.02;
+      font-weight: 950;
+    }
+
+    .ai-subtitle {
+      margin: 0 0 22px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .ai-main {
+      display: grid;
+      gap: 14px;
+      margin: 0 0 18px;
+      color: #f5f6f8;
+      font-size: 19px;
+      line-height: 1.45;
+      font-weight: 850;
+    }
+
+    .ai-main em {
+      color: var(--cyan);
+      font-style: normal;
+    }
+
+    .ai-reason {
+      margin: 0 0 18px;
+      color: #bec3cc;
+      font-size: 14px;
+      line-height: 1.68;
+    }
+
+    .actions {
+      display: grid;
+      gap: 9px;
+    }
+
+    .pill-button {
+      width: 100%;
+      min-height: 45px;
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: #fff;
+      cursor: pointer;
+      transition: transform 180ms ease-out, border-color 180ms ease-out, background 180ms ease-out;
+    }
+
+    .pill-button:hover,
+    .pill-button:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(24, 245, 220, 0.46);
+      background: rgba(24, 245, 220, 0.1);
+    }
+
+    .pill-button.primary {
+      border-color: rgba(24, 245, 220, 0.74);
+      background: var(--cyan);
+      color: #03100f;
+      font-weight: 900;
+    }
+
+    .task-panel {
+      display: none;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+    }
+
+    .feed[data-step="task"] .task-panel,
+    .feed[data-step="scenes"] .task-panel {
+      display: block;
+      animation: reveal 360ms var(--ease) both;
+    }
+
+    .task-title {
+      margin: 0 0 12px;
+      color: #fff;
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    .task-list {
+      display: grid;
+      gap: 9px;
+      margin: 0 0 14px;
+      padding: 0;
+      list-style: none;
+    }
+
+    .task-list li {
+      display: grid;
+      grid-template-columns: 28px 1fr;
+      align-items: center;
+      gap: 9px;
+      min-height: 38px;
+      color: #e8ebef;
+      font-size: 13px;
+    }
+
+    .step-num {
+      width: 28px;
+      height: 28px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(24, 245, 220, 0.12);
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+      margin-bottom: 13px;
+    }
+
+    .chip {
+      padding: 7px 9px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      color: #cfd3da;
+      background: rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+    }
+
+    .scene-tabs {
+      display: none;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 7px;
+      margin: 15px 0 0;
+    }
+
+    .feed[data-step="scenes"] .scene-tabs {
+      display: grid;
+      animation: reveal 300ms var(--ease) both;
+    }
+
+    .tab {
+      min-height: 34px;
+      padding: 0 5px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 999px;
+      color: #d8dce2;
+      background: rgba(255, 255, 255, 0.07);
+      cursor: pointer;
+      font-size: 12px;
+    }
+
+    .tab.active {
+      border-color: rgba(24, 245, 220, 0.66);
+      background: rgba(24, 245, 220, 0.13);
+      color: var(--cyan);
+      font-weight: 900;
+    }
+
+    .brief {
+      display: grid;
+      align-content: center;
+      gap: 22px;
+      min-width: 0;
+    }
+
+    .brand-line {
+      display: inline-flex;
+      align-items: center;
+      width: max-content;
+      max-width: 100%;
+      gap: 10px;
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .brand-mark {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      background: conic-gradient(from 120deg, var(--cyan), var(--red), var(--cyan));
+      box-shadow: 0 0 28px rgba(24, 245, 220, 0.22);
+    }
+
+    .brief h2 {
+      max-width: 660px;
+      margin: 0;
+      color: #fff;
+      font-size: clamp(42px, 6vw, 76px);
+      line-height: 0.98;
+      font-weight: 950;
+    }
+
+    .brief h2 span {
+      color: var(--cyan);
+    }
+
+    .brief-copy {
+      max-width: 620px;
+      margin: 0;
+      color: #c4c8d0;
+      font-size: 18px;
+      line-height: 1.78;
+    }
+
+    .brief-copy strong {
+      color: #fff;
+    }
+
+    .demo-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .control {
+      min-height: 44px;
+      padding: 0 15px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      color: #fff;
+      background: rgba(255, 255, 255, 0.08);
+      cursor: pointer;
+      transition: transform 180ms ease-out, background 180ms ease-out, border-color 180ms ease-out;
+    }
+
+    .control:hover,
+    .control:focus-visible {
+      transform: translateY(-2px);
+      border-color: rgba(24, 245, 220, 0.54);
+      background: rgba(24, 245, 220, 0.1);
+    }
+
+    .control.primary {
+      border-color: rgba(255, 53, 110, 0.65);
+      background: rgba(255, 53, 110, 0.14);
+    }
+
+    .progress {
+      display: grid;
+      gap: 9px;
+      width: min(580px, 100%);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .bar {
+      height: 6px;
+      border-radius: 999px;
+      overflow: hidden;
+      background: rgba(255, 255, 255, 0.11);
+    }
+
+    .bar span {
+      display: block;
+      width: 18%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--red));
+      transition: width 420ms var(--ease);
+    }
+
+    .notes {
+      display: grid;
+      gap: 10px;
+      max-width: 620px;
+    }
+
+    .note {
+      display: grid;
+      grid-template-columns: 22px 1fr;
+      gap: 10px;
+      align-items: start;
+      color: #cfd3da;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .note i {
+      width: 22px;
+      height: 22px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: rgba(24, 245, 220, 0.13);
+      color: var(--cyan);
+      font-style: normal;
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    @keyframes rise {
+      from {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes reveal {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        padding: 18px 14px 28px;
+      }
+
+      .stage {
+        min-height: 0;
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .brief {
+        order: -1;
+      }
+
+      .brief h2 {
+        font-size: clamp(38px, 12vw, 58px);
+      }
+
+      .brief-copy {
+        font-size: 16px;
+      }
+
+      .phone {
+        width: min(370px, 100%);
+      }
+    }
+
+    @media (max-width: 420px) {
+      .phone {
+        border-radius: 28px;
+      }
+
+      .video-title-big {
+        font-size: 32px;
+      }
+
+      .ai-card {
+        padding: 20px 15px 15px;
+      }
+
+      .ai-card h1 {
+        font-size: 30px;
+      }
+
+      .ai-main {
+        font-size: 17px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="stage">
+    <section class="phone" aria-label="抖音信息流 Demo 手机预览">
+      <div id="feed" class="feed" data-step="video">
+        <div class="video-layer main">
+          <div class="video-art">
+            <div class="video-badge">四级备考</div>
+            <h1 class="video-title-big">四级听力<br><span>30 天</span>怎么冲？</h1>
+            <div class="subtitle-line">3 个方法，把听力从听不懂变成能抓关键词。</div>
+          </div>
+        </div>
+
+        <div class="video-layer alt">
+          <div class="video-art">
+            <div class="video-badge">继续刷到的内容</div>
+            <h1 class="video-title-big">AI 学习<br><span>计划</span>生成器</h1>
+            <div class="subtitle-line">收藏越来越多，开始还是有点远。</div>
+          </div>
+        </div>
+
+        <div class="caption">
+          <div class="author">@四级上岸研究所</div>
+          <p class="desc">四级听力最后 30 天怎么冲？3 个方法，把听力从听不懂变成能抓关键词。</p>
+          <div class="music">原声 · 适合睡前收藏，明天再看</div>
+        </div>
+
+        <div class="rail" aria-label="互动按钮">
+          <button class="rail-button" type="button" aria-label="点赞">
+            <span class="rail-icon">♥</span>
+            <span class="rail-label">8.2w</span>
+          </button>
+          <button class="rail-button" type="button" aria-label="评论">
+            <span class="rail-icon">●</span>
+            <span class="rail-label">4362</span>
+          </button>
+          <button id="saveBtn" class="rail-button" type="button" aria-label="收藏">
+            <span class="rail-icon">★</span>
+            <span class="rail-label">收藏</span>
+          </button>
+          <button class="rail-button" type="button" aria-label="分享">
+            <span class="rail-icon">↗</span>
+            <span class="rail-label">分享</span>
+          </button>
+        </div>
+
+        <div id="toast" class="toast">已收藏到「四级备考」</div>
+
+        <div class="stack-overlay">
+          <div class="mini-video-list" aria-label="最近收藏内容">
+            <div class="mini-video">
+              <div class="mini-thumb"></div>
+              <div>四级高频词 100 个</div>
+              <div class="mini-tag">已收藏</div>
+            </div>
+            <div class="mini-video">
+              <div class="mini-thumb"></div>
+              <div>AI 帮你做学习计划</div>
+              <div class="mini-tag">已收藏</div>
+            </div>
+            <div class="mini-video">
+              <div class="mini-thumb"></div>
+              <div>3 分钟肩颈拉伸</div>
+              <div class="mini-tag">已收藏</div>
+            </div>
+            <div class="mini-video">
+              <div class="mini-thumb"></div>
+              <div>10 分钟番茄鸡蛋面</div>
+              <div class="mini-tag">已收藏</div>
+            </div>
+          </div>
+
+          <div class="stats-panel">
+            <div class="stats-title">
+              <span>最近收藏</span>
+              <span>以后再看</span>
+            </div>
+            <div class="stats-grid">
+              <div class="stat"><strong>18</strong><span>四级攻略</span></div>
+              <div class="stat"><strong>7</strong><span>AI 学习</span></div>
+              <div class="stat"><strong>12</strong><span>健身训练</span></div>
+              <div class="stat"><strong>9</strong><span>家常菜谱</span></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="ai-card-wrap">
+          <article class="ai-card" aria-label="别再收藏了 AI 行动卡">
+            <div class="ai-kicker">
+              <span id="cardType">AI 信息流行动卡</span>
+              <span class="live-dot" aria-hidden="true"></span>
+            </div>
+            <h1 id="cardTitle">别再收藏了</h1>
+            <p class="ai-subtitle" id="cardSubtitle">一张把收藏变成行动的 AI 信息流卡</p>
+            <div class="ai-main" id="cardMain">
+              <div>你最近收藏了 <em>18 条四级攻略</em>。</div>
+              <div>但真正开始的，好像还没有。</div>
+            </div>
+            <p class="ai-reason" id="cardReason">
+              你不是不努力，是每条视频都太像“完整计划”。今天先不背 100 个词，只做一个 5 分钟听力热身。
+            </p>
+            <div class="actions" id="cardActions">
+              <button class="pill-button" type="button" data-action="start">现在开始</button>
+              <button class="pill-button" type="button" data-action="lighter">换个轻一点的</button>
+              <button class="pill-button primary" type="button" data-action="steps">拆成 3 步</button>
+            </div>
+
+            <div class="task-panel" id="taskPanel">
+              <h2 class="task-title" id="taskTitle">今日小行动：5 分钟四级听力热身</h2>
+              <ul class="task-list" id="taskList">
+                <li><span class="step-num">1</span><span>听 30 秒短句</span></li>
+                <li><span class="step-num">2</span><span>选出你听到的关键词</span></li>
+                <li><span class="step-num">3</span><span>AI 生成 3 个相似句，明天继续练</span></li>
+              </ul>
+              <div class="chips" id="taskChips">
+                <span class="chip">预计 5 分钟</span>
+                <span class="chip">难度：低</span>
+                <span class="chip">适合现在开始</span>
+              </div>
+              <div class="actions">
+                <button id="beginTask" class="pill-button primary" type="button">开始 5 分钟</button>
+                <button class="pill-button" type="button" data-action="word">换成单词任务</button>
+                <button class="pill-button" type="button" data-action="later">晚点提醒我</button>
+              </div>
+            </div>
+
+            <div class="scene-tabs" aria-label="多场景切换">
+              <button class="tab active" type="button" data-scene="cet">四级</button>
+              <button class="tab" type="button" data-scene="fitness">健身</button>
+              <button class="tab" type="button" data-scene="food">做饭</button>
+            </div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="brief" aria-label="作品说明和演示控制">
+      <div class="brand-line">
+        <span class="brand-mark" aria-hidden="true"></span>
+        <span>赛道三 · 刷到懂你的瞬间</span>
+      </div>
+      <h2>别再收藏了，<br><span>先做一小步。</span></h2>
+      <p class="brief-copy">
+        这是一个抖音信息流里的 <strong>AI 行动卡</strong>：它不继续塞给用户更多内容，而是把用户刷过、收藏过的内容，变成此刻最容易开始的一件小事。
+      </p>
+
+      <div class="demo-controls" aria-label="演示流程控制">
+        <button id="autoDemo" class="control primary" type="button">自动演示</button>
+        <button class="control" type="button" data-jump="video">1 普通信息流</button>
+        <button class="control" type="button" data-jump="stack">2 收藏堆积</button>
+        <button class="control" type="button" data-jump="card">3 AI 行动卡</button>
+        <button class="control" type="button" data-jump="task">4 拆成 3 步</button>
+        <button class="control" type="button" data-jump="scenes">5 多场景</button>
+      </div>
+
+      <div class="progress" aria-label="演示进度">
+        <div class="progress-label">
+          <span id="stepLabel">普通信息流</span>
+          <span id="stepCount">1 / 5</span>
+        </div>
+        <div class="bar"><span id="barFill"></span></div>
+      </div>
+
+      <div class="notes">
+        <div class="note">
+          <i>1</i>
+          <span>主场景锁定大学生四级备考：收藏了很多攻略，但没有真正开始。</span>
+        </div>
+        <div class="note">
+          <i>2</i>
+          <span>补充展示健身和做饭，证明它不是单点工具，而是一种可扩展的信息流内容单元。</span>
+        </div>
+        <div class="note">
+          <i>3</i>
+          <span>收尾记忆点：收藏不是终点。这一次，刷到就先做一小步。</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const feed = document.querySelector("#feed");
+    const saveBtn = document.querySelector("#saveBtn");
+    const autoDemo = document.querySelector("#autoDemo");
+    const toast = document.querySelector("#toast");
+    const controls = document.querySelectorAll("[data-jump]");
+    const barFill = document.querySelector("#barFill");
+    const stepLabel = document.querySelector("#stepLabel");
+    const stepCount = document.querySelector("#stepCount");
+    const beginTask = document.querySelector("#beginTask");
+    const sceneTabs = document.querySelectorAll("[data-scene]");
+
+    const cardType = document.querySelector("#cardType");
+    const cardTitle = document.querySelector("#cardTitle");
+    const cardSubtitle = document.querySelector("#cardSubtitle");
+    const cardMain = document.querySelector("#cardMain");
+    const cardReason = document.querySelector("#cardReason");
+    const taskTitle = document.querySelector("#taskTitle");
+    const taskList = document.querySelector("#taskList");
+    const taskChips = document.querySelector("#taskChips");
+
+    const steps = {
+      video: { label: "普通信息流", index: 1, width: "18%" },
+      stack: { label: "收藏堆积", index: 2, width: "38%" },
+      card: { label: "AI 行动卡刷出", index: 3, width: "60%" },
+      task: { label: "拆成 3 步", index: 4, width: "80%" },
+      scenes: { label: "多场景切换", index: 5, width: "100%" }
+    };
+
+    const scenes = {
+      cet: {
+        type: "AI 信息流行动卡",
+        title: "别再收藏了",
+        subtitle: "一张把收藏变成行动的 AI 信息流卡",
+        main: [
+          "你最近收藏了 <em>18 条四级攻略</em>。",
+          "但真正开始的，好像还没有。"
+        ],
+        reason: "你不是不努力，是每条视频都太像“完整计划”。今天先不背 100 个词，只做一个 5 分钟听力热身。",
+        taskTitle: "今日小行动：5 分钟四级听力热身",
+        tasks: ["听 30 秒短句", "选出你听到的关键词", "AI 生成 3 个相似句，明天继续练"],
+        chips: ["预计 5 分钟", "难度：低", "适合现在开始"]
+      },
+      fitness: {
+        type: "AI 信息流行动卡",
+        title: "今天练轻一点",
+        subtitle: "从收藏的健身视频里挑一个能开始的小动作",
+        main: [
+          "你收藏了 <em>12 条腹肌训练</em>。",
+          "但最近都在晚上 11 点后刷到。"
+        ],
+        reason: "今天不练完整套，先做 3 分钟肩颈拉伸。不是为了立刻变强，是让身体知道你开始了。",
+        taskTitle: "今日小行动：3 分钟肩颈拉伸",
+        tasks: ["坐直，慢慢转动肩膀 20 秒", "左右侧颈各拉伸 30 秒", "AI 明天帮你换一个低压力动作"],
+        chips: ["预计 3 分钟", "难度：很低", "适合睡前"]
+      },
+      food: {
+        type: "AI 信息流行动卡",
+        title: "今晚别纠结了",
+        subtitle: "从收藏的菜谱里生成今天能做的一顿饭",
+        main: [
+          "你收藏了 <em>9 道家常菜</em>。",
+          "但今晚还是不知道吃什么。"
+        ],
+        reason: "今天适合：番茄鸡蛋面。10 分钟、少洗碗、不会翻车，还能把你最近收藏的做法用上。",
+        taskTitle: "今日小行动：番茄鸡蛋面 3 步",
+        tasks: ["番茄切块，鸡蛋打散", "先炒蛋再炒番茄，加水煮开", "下面，出锅前加盐和一点糖"],
+        chips: ["预计 10 分钟", "少洗碗", "不会翻车"]
+      }
+    };
+
+    function setStep(step) {
+      feed.dataset.step = step;
+      const meta = steps[step];
+      stepLabel.textContent = meta.label;
+      stepCount.textContent = `${meta.index} / 5`;
+      barFill.style.width = meta.width;
+
+      controls.forEach((button) => {
+        button.classList.toggle("primary", button.dataset.jump === step);
+      });
+
+      autoDemo.classList.remove("primary");
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => {
+        toast.classList.remove("show");
+      }, 1400);
+    }
+
+    function renderScene(name) {
+      const data = scenes[name];
+      cardType.textContent = data.type;
+      cardTitle.textContent = data.title;
+      cardSubtitle.textContent = data.subtitle;
+      cardMain.innerHTML = data.main.map((line) => `<div>${line}</div>`).join("");
+      cardReason.textContent = data.reason;
+      taskTitle.textContent = data.taskTitle;
+      taskList.innerHTML = data.tasks.map((task, index) => (
+        `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`
+      )).join("");
+      taskChips.innerHTML = data.chips.map((chip) => `<span class="chip">${chip}</span>`).join("");
+
+      sceneTabs.forEach((tab) => {
+        tab.classList.toggle("active", tab.dataset.scene === name);
+      });
+    }
+
+    saveBtn.addEventListener("click", () => {
+      saveBtn.classList.add("saved");
+      showToast("已收藏到「四级备考」");
+      window.setTimeout(() => setStep("stack"), 520);
+    });
+
+    document.querySelector("#cardActions").addEventListener("click", (event) => {
+      const button = event.target.closest("button");
+      if (!button) return;
+
+      if (button.dataset.action === "steps" || button.dataset.action === "start") {
+        setStep("task");
+      }
+
+      if (button.dataset.action === "lighter") {
+        renderScene("cet");
+        cardReason.textContent = "那就再轻一点：今天只听 15 秒短句，听不懂也没关系，先让耳朵进入状态。";
+        setStep("task");
+      }
+    });
+
+    beginTask.addEventListener("click", () => {
+      beginTask.textContent = "已开始";
+      showToast("不用完成一整套计划，今天先让自己动起来。");
+      window.setTimeout(() => setStep("scenes"), 580);
+    });
+
+    document.querySelectorAll("[data-action='word'], [data-action='later']").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.dataset.action === "word") {
+          taskTitle.textContent = "今日小行动：4 个四级高频词";
+          taskList.innerHTML = ["听一遍单词发音", "选 1 个词造句", "AI 帮你生成同义替换"].map((task, index) => (
+            `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`
+          )).join("");
+          showToast("已换成更轻的单词任务");
+        } else {
+          showToast("今晚 21:30 再轻轻推你一下");
+        }
+      });
+    });
+
+    controls.forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.dataset.jump === "video") {
+          saveBtn.classList.remove("saved");
+          beginTask.textContent = "开始 5 分钟";
+          renderScene("cet");
+        }
+        if (button.dataset.jump === "card" || button.dataset.jump === "task") {
+          renderScene("cet");
+        }
+        setStep(button.dataset.jump);
+      });
+    });
+
+    function runAutoDemo() {
+      autoDemo.classList.add("primary");
+      saveBtn.classList.remove("saved");
+      beginTask.textContent = "开始 5 分钟";
+      renderScene("cet");
+      setStep("video");
+
+      window.clearTimeout(runAutoDemo.t1);
+      window.clearTimeout(runAutoDemo.t2);
+      window.clearTimeout(runAutoDemo.t3);
+      window.clearTimeout(runAutoDemo.t4);
+      window.clearTimeout(runAutoDemo.t5);
+      window.clearTimeout(runAutoDemo.t6);
+
+      runAutoDemo.t1 = window.setTimeout(() => {
+        saveBtn.classList.add("saved");
+        showToast("已收藏到「四级备考」");
+      }, 900);
+
+      runAutoDemo.t2 = window.setTimeout(() => setStep("stack"), 1800);
+      runAutoDemo.t3 = window.setTimeout(() => setStep("card"), 3600);
+      runAutoDemo.t4 = window.setTimeout(() => setStep("task"), 5600);
+      runAutoDemo.t5 = window.setTimeout(() => setStep("scenes"), 8200);
+      runAutoDemo.t6 = window.setTimeout(() => {
+        renderScene("fitness");
+        window.setTimeout(() => renderScene("food"), 1800);
+        window.setTimeout(() => {
+          showToast("收藏不是终点。这一次，刷到就先做一小步。");
+          autoDemo.classList.remove("primary");
+        }, 3600);
+      }, 9600);
+    }
+
+    autoDemo.addEventListener("click", runAutoDemo);
+
+    sceneTabs.forEach((tab) => {
+      tab.addEventListener("click", () => {
+        renderScene(tab.dataset.scene);
+        setStep("scenes");
+      });
+    });
+
+    window.addEventListener("keydown", (event) => {
+      const order = ["video", "stack", "card", "task", "scenes"];
+      const current = feed.dataset.step;
+      const index = order.indexOf(current);
+
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        setStep(order[Math.min(index + 1, order.length - 1)]);
+      }
+
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        setStep(order[Math.max(index - 1, 0)]);
+      }
+    });
+  </script>
+</body>
+</html>
