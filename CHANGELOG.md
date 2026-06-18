@@ -25,6 +25,7 @@ All notable changes to this project will be documented in this file.
 - Synchronized `原型Demo/index.html`, `发布包/index.html`, and root `index.html` so local preview and deployment use the same version.
 - Improved the demo workflow for portfolio production by making key states directly addressable through URLs.
 - Refined the demo chrome to better match Douyin screenshots: expanded top channel navigation, added creator avatar affordance, search row, bottom navigation, message badge, and home indicator.
+- Reworked the right-side interaction rail icons to better match Douyin's solid white heart, comment bubble, favorite star, and share arrow style.
 
 ## [0.1.0] - 2026-06-18
 
