@@ -390,7 +390,10 @@
 
     .feed[data-step="card"] .caption,
     .feed[data-step="task"] .caption,
-    .feed[data-step="scenes"] .caption {
+    .feed[data-step="scenes"] .caption,
+    .feed[data-step="card"] .rail,
+    .feed[data-step="task"] .rail,
+    .feed[data-step="scenes"] .rail {
       opacity: 0;
       transform: translateY(14px);
       pointer-events: none;
@@ -434,6 +437,7 @@
       display: grid;
       gap: 13px;
       justify-items: center;
+      transition: opacity 260ms ease-out, transform 260ms ease-out;
     }
 
     .rail-button {
