@@ -161,6 +161,7 @@
 - `比赛资料/提交信息草稿.md`
 - `比赛资料/提交信息二轮润色版.md`
 - `比赛资料/作品集框架.md`
+- `比赛资料/作品集截图清单.md`
 - `比赛资料/别再收藏了-作品说明书.md`
 - `原型Demo/index.html`
 - `发布包/index.html`
@@ -179,6 +180,12 @@
   - AI 行动卡改为信息流内刷出的内容单元，而不是弹窗。
   - 收藏堆积痛点更明确。
   - 自动演示节奏已放慢，便于评委观看和后续录屏。
+- Demo 已支持作品集截图模式：
+  - `?step=video&capture=1`
+  - `?step=stack&capture=1&saved=1`
+  - `?step=card&capture=1&saved=1`
+  - `?step=task&capture=1&saved=1`
+  - 多场景可用 `?step=scenes&scene=fitness&capture=1&saved=1`
 - `原型Demo/index.html`、`发布包/index.html`、根目录 `index.html` 已同步为同一版本。
 - 60 秒和 30 秒讲解脚本。
 - 提交信息 15-21 题初版草稿。

@@ -41,6 +41,26 @@
       overflow-x: hidden;
     }
 
+    body.capture {
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    body.capture .stage {
+      width: min(440px, 100%);
+      min-height: calc(100vh - 36px);
+      grid-template-columns: 1fr;
+      gap: 0;
+    }
+
+    body.capture .brief {
+      display: none;
+    }
+
+    body.capture .phone {
+      width: min(410px, calc(100vw - 36px));
+    }
+
     button {
       font: inherit;
       -webkit-tap-highlight-color: transparent;
@@ -1120,6 +1140,7 @@
     };
 
     function setStep(step) {
+      if (!steps[step]) return;
       feed.dataset.step = step;
       const meta = steps[step];
       stepLabel.textContent = meta.label;
@@ -1137,6 +1158,7 @@
     }
 
     function renderScene(name) {
+      if (!scenes[name]) return;
       const data = scenes[name];
       cardType.textContent = data.type;
       cardTitle.textContent = data.title;
@@ -1231,6 +1253,23 @@
       if (event.key === "ArrowRight" || event.key === "ArrowDown") setStep(order[Math.min(index + 1, order.length - 1)]);
       if (event.key === "ArrowLeft" || event.key === "ArrowUp") setStep(order[Math.max(index - 1, 0)]);
     });
+
+    function applyUrlState() {
+      const params = new URLSearchParams(window.location.search);
+      const step = params.get("step");
+      const scene = params.get("scene");
+      const capture = params.get("capture");
+      const saved = params.get("saved");
+
+      if (capture === "1") document.body.classList.add("capture");
+      if (scene) renderScene(scene);
+      if (saved === "1" || step === "stack" || step === "card" || step === "task" || step === "scenes") {
+        saveBtn.classList.add("saved");
+      }
+      if (step) setStep(step);
+    }
+
+    applyUrlState();
   </script>
 </body>
 </html>
