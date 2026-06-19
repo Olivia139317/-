@@ -4,6 +4,10 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>别再收藏了 - AI 信息流行动卡 Demo</title>
+  <meta name="description" content="《别再收藏了》是一种长在抖音信息流里的 AI 行动卡，把收藏内容转化成此刻能开始的一小步。">
+  <meta name="theme-color" content="#050507">
+  <meta property="og:title" content="别再收藏了 - AI 信息流行动卡 Demo">
+  <meta property="og:description" content="把刷过、收藏过的内容，变成此刻能开始的一小步。">
   <style>
     :root {
       --bg: #050507;
@@ -1129,6 +1133,17 @@
       to { opacity: 1; transform: translateY(0); }
     }
 
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 1ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 1ms !important;
+      }
+    }
+
     @media (max-width: 900px) {
       body { padding: 18px 14px 28px; }
       .stage {
@@ -1579,12 +1594,17 @@
       const order = ["video", "stack", "card", "task", "scenes"];
       const current = feed.dataset.step;
       const index = order.indexOf(current);
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
-        stopAutoDemo();
+      const isNext = event.key === "ArrowRight" || event.key === "ArrowDown";
+      const isPrev = event.key === "ArrowLeft" || event.key === "ArrowUp";
+      if (!isNext && !isPrev) return;
+
+      event.preventDefault();
+      stopAutoDemo();
+
+      if (isNext) {
         setStep(order[Math.min(index + 1, order.length - 1)]);
       }
-      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
-        stopAutoDemo();
+      if (isPrev) {
         setStep(order[Math.max(index - 1, 0)]);
       }
     });
