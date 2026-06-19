@@ -55,6 +55,8 @@
       min-height: calc(100vh - 36px);
       grid-template-columns: 1fr;
       gap: 0;
+      align-items: center;
+      justify-items: center;
     }
 
     body.capture .brief {
@@ -63,6 +65,12 @@
 
     body.capture .phone {
       width: min(410px, calc(100vw - 36px));
+      box-shadow: 0 20px 70px rgba(0,0,0,.56);
+    }
+
+    body.capture .demo-controls,
+    body.capture .snapshot-box {
+      display: none;
     }
 
     button {
@@ -269,7 +277,7 @@
     .video-page {
       position: absolute;
       inset: 0;
-      transition: transform 560ms var(--ease), opacity 360ms ease-out, filter 360ms ease-out;
+      transition: transform 680ms var(--ease), opacity 420ms ease-out, filter 520ms ease-out;
       overflow: hidden;
     }
 
@@ -304,6 +312,7 @@
     .feed[data-step="card"] .video-page.next,
     .feed[data-step="task"] .video-page.next,
     .feed[data-step="scenes"] .video-page.next {
+      transform: translateY(-9%);
       filter: brightness(.62) blur(1.5px);
     }
 
@@ -948,9 +957,9 @@
       display: grid;
       align-items: end;
       opacity: 0;
-      transform: translateY(100%);
+      transform: translateY(108%);
       pointer-events: none;
-      transition: opacity 360ms ease-out, transform 520ms var(--ease);
+      transition: opacity 440ms ease-out, transform 720ms cubic-bezier(.2,.82,.22,1);
     }
 
     .feed[data-step="card"] .ai-card-wrap,
@@ -959,6 +968,12 @@
       opacity: 1;
       transform: translateY(0);
       pointer-events: auto;
+    }
+
+    .feed[data-step="card"] .ai-card,
+    .feed[data-step="task"] .ai-card,
+    .feed[data-step="scenes"] .ai-card {
+      animation: card-arrive 520ms 90ms cubic-bezier(.2,.82,.22,1) both;
     }
 
     .ai-card {
@@ -1338,6 +1353,11 @@
     @keyframes reveal {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes card-arrive {
+      from { transform: translateY(18px) scale(.985); }
+      to { transform: translateY(0) scale(1); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1821,17 +1841,17 @@
         setSavedState(true);
         showToast("已收藏到「四级备考」");
       }, 1100);
-      runAutoDemo.t2 = window.setTimeout(() => setStep("stack"), 2400);
-      runAutoDemo.t3 = window.setTimeout(() => setStep("card"), 5200);
-      runAutoDemo.t4 = window.setTimeout(() => setStep("task"), 8400);
-      runAutoDemo.t5 = window.setTimeout(() => setStep("scenes"), 12200);
-      runAutoDemo.t6 = window.setTimeout(() => renderScene("fitness"), 13700);
+      runAutoDemo.t2 = window.setTimeout(() => setStep("stack"), 2800);
+      runAutoDemo.t3 = window.setTimeout(() => setStep("card"), 6400);
+      runAutoDemo.t4 = window.setTimeout(() => setStep("task"), 10400);
+      runAutoDemo.t5 = window.setTimeout(() => setStep("scenes"), 14600);
+      runAutoDemo.t6 = window.setTimeout(() => renderScene("fitness"), 16400);
       runAutoDemo.t7 = window.setTimeout(() => {
         renderScene("food");
         showToast("收藏不是终点。这一次，刷到就先做一小步。");
         isAutoDemoRunning = false;
         autoDemo.classList.remove("primary");
-      }, 15800);
+      }, 18400);
     }
 
     autoDemo.addEventListener("click", runAutoDemo);
