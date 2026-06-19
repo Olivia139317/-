@@ -561,16 +561,36 @@
       color: #fff;
     }
 
+    .like-icon,
+    .favorite-icon,
     .comment-icon,
     .share-icon {
       font-size: 0;
     }
 
+    .like-icon::before {
+      content: "";
+      width: 43px;
+      height: 39px;
+      background: #fff;
+      clip-path: path("M21.5 36.5 C20 34.9 7.2 24.2 4.5 17.4 C1.5 9.8 5.8 3.4 12.8 3.4 C16.7 3.4 19.4 5.4 21.5 8.6 C23.6 5.4 26.3 3.4 30.2 3.4 C37.2 3.4 41.5 9.8 38.5 17.4 C35.8 24.2 23 34.9 21.5 36.5 Z");
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.38));
+    }
+
+    .favorite-icon::before {
+      content: "";
+      width: 42px;
+      height: 40px;
+      background: #fff;
+      clip-path: path("M21 2.5 L26.8 14.3 L39.8 16.1 L30.4 25.3 L32.6 38.2 L21 32.1 L9.4 38.2 L11.6 25.3 L2.2 16.1 L15.2 14.3 Z");
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.38));
+    }
+
     .comment-icon::before {
       content: "";
-      width: 38px;
-      height: 27px;
-      border-radius: 22px;
+      width: 41px;
+      height: 28px;
+      border-radius: 999px;
       background: #fff;
       box-shadow: 0 2px 10px rgba(0,0,0,.36);
     }
@@ -578,32 +598,51 @@
     .comment-icon::after {
       content: "";
       position: absolute;
-      left: 13px;
-      bottom: 6px;
-      width: 13px;
-      height: 13px;
+      left: 14px;
+      bottom: 5px;
+      width: 12px;
+      height: 12px;
       background: #fff;
-      clip-path: polygon(0 0, 100% 0, 18% 100%);
-      transform: rotate(-18deg);
+      clip-path: polygon(0 0, 100% 0, 36% 100%);
+      transform: rotate(-12deg);
     }
 
     .comment-dot {
       position: absolute;
       top: 18px;
+      left: 13px;
       width: 6px;
       height: 6px;
       border-radius: 50%;
       background: #232329;
       z-index: 1;
-      box-shadow: 13px 0 0 #232329;
+      box-shadow: 10px 0 0 #232329, 20px 0 0 #232329;
     }
 
     .share-icon::before {
       content: "";
-      width: 39px;
-      height: 28px;
+      position: absolute;
+      left: 7px;
+      bottom: 10px;
+      width: 30px;
+      height: 22px;
+      border: 9px solid #fff;
+      border-left: 0;
+      border-bottom: 0;
+      border-radius: 0 20px 0 0;
+      transform: skewY(-8deg);
+      filter: drop-shadow(0 2px 8px rgba(0,0,0,.38));
+    }
+
+    .share-icon::after {
+      content: "";
+      position: absolute;
+      right: 4px;
+      top: 6px;
+      width: 24px;
+      height: 24px;
       background: #fff;
-      clip-path: polygon(7% 55%, 62% 8%, 62% 31%, 100% 31%, 100% 76%, 62% 76%, 62% 100%);
+      clip-path: polygon(0 0, 100% 50%, 0 100%, 24% 52%);
       filter: drop-shadow(0 2px 8px rgba(0,0,0,.38));
     }
 
@@ -1339,7 +1378,7 @@
             <span class="rail-icon avatar-icon">头像</span>
           </button>
           <button class="rail-button" type="button" aria-label="点赞">
-            <span class="rail-icon">♥</span>
+            <span class="rail-icon like-icon"></span>
             <span class="rail-label">8.2万</span>
           </button>
           <button class="rail-button" type="button" aria-label="评论">
@@ -1347,7 +1386,7 @@
             <span class="rail-label">4362</span>
           </button>
           <button id="saveBtn" class="rail-button" type="button" aria-label="收藏">
-            <span class="rail-icon">★</span>
+            <span class="rail-icon favorite-icon"></span>
             <span class="rail-label">2.5万</span>
           </button>
           <button class="rail-button" type="button" aria-label="分享">
