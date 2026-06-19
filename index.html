@@ -199,6 +199,14 @@
       mask-image: linear-gradient(90deg, transparent 0, #000 9%, #000 91%, transparent 100%);
     }
 
+    .tab-track > span {
+      flex: 0 0 auto;
+    }
+
+    .tab-track > span:first-child {
+      margin-left: -34px;
+    }
+
     .top-tabs span.active {
       color: #fff;
       position: relative;
@@ -216,12 +224,12 @@
       background: #fff;
     }
 
-    .live-pill,
+    .live-tag,
     .follow-dot {
       position: relative;
     }
 
-    .live-pill::after {
+    .live-tag::after {
       content: "直播";
       position: absolute;
       top: -16px;
@@ -1198,10 +1206,10 @@
           <span class="hamburger">≡</span>
           <div class="tab-track" aria-label="抖音频道">
             <span>热点</span>
-            <span class="live-pill">直播</span>
-            <span class="follow-dot">关注</span>
+            <span>直播</span>
+            <span class="live-tag">关注</span>
             <span>北京</span>
-            <span>团购</span>
+            <span class="follow-dot">团购</span>
             <span>商城</span>
             <span class="active">推荐</span>
           </div>
