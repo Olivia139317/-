@@ -1145,8 +1145,28 @@
     @media (max-width: 420px) {
       .phone { border-radius: 30px; }
       .video-title { font-size: 32px; }
+      .ai-card {
+        padding: 16px 14px 14px;
+      }
       .ai-card h1 { font-size: 29px; }
       .ai-main { font-size: 16px; }
+      .ai-reason {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .actions { gap: 6px; }
+      .pill-button { min-height: 39px; }
+      .task-panel {
+        margin-top: 12px;
+        padding-top: 12px;
+      }
+      .task-list {
+        gap: 6px;
+        margin-bottom: 10px;
+      }
+      .task-list li { min-height: 30px; }
+      .chip { padding: 5px 7px; }
+      .scene-tabs { margin-top: 8px; }
       .stats { grid-template-columns: repeat(2, 1fr); }
     }
   </style>
@@ -1364,6 +1384,7 @@
     const taskTitle = document.querySelector("#taskTitle");
     const taskList = document.querySelector("#taskList");
     const taskChips = document.querySelector("#taskChips");
+    let isAutoDemoRunning = false;
 
     const steps = {
       video: { label: "普通信息流", index: 1, width: "18%" },
@@ -1423,7 +1444,7 @@
       stepCount.textContent = `${meta.index} / 5`;
       barFill.style.width = meta.width;
       controls.forEach((button) => button.classList.toggle("primary", button.dataset.jump === step));
-      autoDemo.classList.remove("primary");
+      if (!isAutoDemoRunning) autoDemo.classList.remove("primary");
     }
 
     function showToast(message) {
@@ -1447,11 +1468,27 @@
       sceneTabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scene === name));
     }
 
+    const actionTimers = new Set();
+
+    function clearActionTimers() {
+      actionTimers.forEach((timer) => window.clearTimeout(timer));
+      actionTimers.clear();
+    }
+
+    function setActionTimeout(callback, delay) {
+      const timer = window.setTimeout(() => {
+        actionTimers.delete(timer);
+        callback();
+      }, delay);
+      actionTimers.add(timer);
+      return timer;
+    }
+
     saveBtn.addEventListener("click", () => {
       stopAutoDemo();
       saveBtn.classList.add("saved");
       showToast("已收藏到「四级备考」");
-      window.setTimeout(() => setStep("stack"), 620);
+      setActionTimeout(() => setStep("stack"), 620);
     });
 
     document.querySelector("#cardActions").addEventListener("click", (event) => {
@@ -1470,7 +1507,7 @@
       stopAutoDemo();
       beginTask.textContent = "已开始";
       showToast("不用完成一整套计划，今天先让自己动起来。");
-      window.setTimeout(() => setStep("scenes"), 700);
+      setActionTimeout(() => setStep("scenes"), 700);
     });
 
     document.querySelector("[data-action='word']").addEventListener("click", () => {
@@ -1488,7 +1525,7 @@
           beginTask.textContent = "开始 5 分钟";
           renderScene("cet");
         }
-        if (button.dataset.jump === "card" || button.dataset.jump === "task") renderScene("cet");
+        if (button.dataset.jump === "card" || button.dataset.jump === "task" || button.dataset.jump === "scenes") renderScene("cet");
         setStep(button.dataset.jump);
       });
     });
@@ -1498,12 +1535,16 @@
     }
 
     function stopAutoDemo() {
+      isAutoDemoRunning = false;
       clearDemoTimers();
+      clearActionTimers();
       autoDemo.classList.remove("primary");
     }
 
     function runAutoDemo() {
       clearDemoTimers();
+      clearActionTimers();
+      isAutoDemoRunning = true;
       autoDemo.classList.add("primary");
       saveBtn.classList.remove("saved");
       beginTask.textContent = "开始 5 分钟";
@@ -1522,6 +1563,7 @@
       runAutoDemo.t7 = window.setTimeout(() => {
         renderScene("food");
         showToast("收藏不是终点。这一次，刷到就先做一小步。");
+        isAutoDemoRunning = false;
         autoDemo.classList.remove("primary");
       }, 15800);
     }
