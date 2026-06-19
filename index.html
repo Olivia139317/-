@@ -557,7 +557,6 @@
       clip-path: polygon(7% 55%, 62% 8%, 62% 31%, 100% 31%, 100% 76%, 62% 76%, 62% 100%);
       filter: drop-shadow(0 2px 8px rgba(0,0,0,.38));
     }
-    }
 
     .toast {
       position: absolute;
@@ -1449,6 +1448,7 @@
     }
 
     saveBtn.addEventListener("click", () => {
+      stopAutoDemo();
       saveBtn.classList.add("saved");
       showToast("已收藏到「四级备考」");
       window.setTimeout(() => setStep("stack"), 620);
@@ -1457,6 +1457,7 @@
     document.querySelector("#cardActions").addEventListener("click", (event) => {
       const button = event.target.closest("button");
       if (!button) return;
+      stopAutoDemo();
       if (button.dataset.action === "steps") setStep("task");
       if (button.dataset.action === "lighter") {
         renderScene("cet");
@@ -1466,12 +1467,14 @@
     });
 
     beginTask.addEventListener("click", () => {
+      stopAutoDemo();
       beginTask.textContent = "已开始";
       showToast("不用完成一整套计划，今天先让自己动起来。");
       window.setTimeout(() => setStep("scenes"), 700);
     });
 
     document.querySelector("[data-action='word']").addEventListener("click", () => {
+      stopAutoDemo();
       taskTitle.textContent = "今日小行动：4 个四级高频词";
       taskList.innerHTML = ["听一遍单词发音", "选 1 个词造句", "AI 帮你生成同义替换"].map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
       showToast("已换成更轻的单词任务");
@@ -1479,6 +1482,7 @@
 
     controls.forEach((button) => {
       button.addEventListener("click", () => {
+        stopAutoDemo();
         if (button.dataset.jump === "video") {
           saveBtn.classList.remove("saved");
           beginTask.textContent = "开始 5 分钟";
@@ -1491,6 +1495,11 @@
 
     function clearDemoTimers() {
       ["t1", "t2", "t3", "t4", "t5", "t6", "t7"].forEach((key) => window.clearTimeout(runAutoDemo[key]));
+    }
+
+    function stopAutoDemo() {
+      clearDemoTimers();
+      autoDemo.classList.remove("primary");
     }
 
     function runAutoDemo() {
@@ -1519,6 +1528,7 @@
 
     autoDemo.addEventListener("click", runAutoDemo);
     sceneTabs.forEach((tab) => tab.addEventListener("click", () => {
+      stopAutoDemo();
       renderScene(tab.dataset.scene);
       setStep("scenes");
     }));
@@ -1527,8 +1537,14 @@
       const order = ["video", "stack", "card", "task", "scenes"];
       const current = feed.dataset.step;
       const index = order.indexOf(current);
-      if (event.key === "ArrowRight" || event.key === "ArrowDown") setStep(order[Math.min(index + 1, order.length - 1)]);
-      if (event.key === "ArrowLeft" || event.key === "ArrowUp") setStep(order[Math.max(index - 1, 0)]);
+      if (event.key === "ArrowRight" || event.key === "ArrowDown") {
+        stopAutoDemo();
+        setStep(order[Math.min(index + 1, order.length - 1)]);
+      }
+      if (event.key === "ArrowLeft" || event.key === "ArrowUp") {
+        stopAutoDemo();
+        setStep(order[Math.max(index - 1, 0)]);
+      }
     });
 
     function applyUrlState() {
