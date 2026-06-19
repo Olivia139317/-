@@ -744,11 +744,125 @@
     .save-item:nth-child(4) { animation-delay: 240ms; }
 
     .thumb {
+      position: relative;
+      overflow: hidden;
       height: 34px;
       border-radius: 6px;
       background:
         linear-gradient(135deg, rgba(24,245,220,.45), rgba(255,53,110,.34)),
         #20232b;
+    }
+
+    .thumb::before,
+    .thumb::after {
+      content: "";
+      position: absolute;
+      pointer-events: none;
+    }
+
+    .thumb-vocab {
+      background:
+        linear-gradient(135deg, rgba(14,18,25,.18), rgba(14,18,25,.42)),
+        linear-gradient(135deg, #18f5dc 0%, #2b6b7a 46%, #ff356e 100%);
+    }
+
+    .thumb-vocab::before {
+      left: 6px;
+      top: 7px;
+      width: 21px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.92);
+      box-shadow: 0 8px 0 rgba(255,255,255,.72), 0 16px 0 rgba(255,255,255,.48);
+    }
+
+    .thumb-vocab::after {
+      right: 6px;
+      top: 7px;
+      width: 9px;
+      height: 20px;
+      border-radius: 2px;
+      background: rgba(255,255,255,.22);
+      border-top: 3px solid rgba(255,255,255,.86);
+    }
+
+    .thumb-plan {
+      background:
+        radial-gradient(circle at 67% 35%, rgba(255,255,255,.9) 0 3px, transparent 4px),
+        radial-gradient(circle at 39% 66%, rgba(255,255,255,.74) 0 3px, transparent 4px),
+        linear-gradient(135deg, #10242c 0%, #18f5dc 44%, #ff356e 100%);
+    }
+
+    .thumb-plan::before {
+      left: 12px;
+      top: 10px;
+      width: 22px;
+      height: 14px;
+      border-top: 2px solid rgba(255,255,255,.74);
+      border-right: 2px solid rgba(255,255,255,.74);
+      transform: rotate(-28deg);
+    }
+
+    .thumb-plan::after {
+      left: 8px;
+      bottom: 6px;
+      width: 26px;
+      height: 4px;
+      border-radius: 999px;
+      background: rgba(0,0,0,.28);
+    }
+
+    .thumb-stretch {
+      background:
+        linear-gradient(160deg, rgba(0,0,0,.08), rgba(0,0,0,.48)),
+        linear-gradient(135deg, #1de9c7 0%, #59737d 52%, #c44872 100%);
+    }
+
+    .thumb-stretch::before {
+      left: 17px;
+      top: 7px;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: -8px 12px 0 -2px rgba(255,255,255,.9), 9px 12px 0 -2px rgba(255,255,255,.9);
+    }
+
+    .thumb-stretch::after {
+      left: 15px;
+      top: 17px;
+      width: 12px;
+      height: 10px;
+      border-left: 4px solid #fff;
+      border-bottom: 4px solid #fff;
+      border-radius: 0 0 0 9px;
+      transform: rotate(-20deg);
+    }
+
+    .thumb-food {
+      background:
+        radial-gradient(circle at 66% 27%, #ff6b4a 0 8px, transparent 9px),
+        radial-gradient(circle at 32% 30%, #ffd166 0 6px, transparent 7px),
+        linear-gradient(135deg, #16242b 0%, #18d2bd 42%, #bd355f 100%);
+    }
+
+    .thumb-food::before {
+      left: 8px;
+      bottom: 6px;
+      width: 26px;
+      height: 11px;
+      border-radius: 0 0 18px 18px;
+      background: rgba(255,255,255,.94);
+    }
+
+    .thumb-food::after {
+      left: 12px;
+      bottom: 15px;
+      width: 22px;
+      height: 7px;
+      border-top: 2px solid rgba(255,255,255,.88);
+      border-radius: 50%;
+      transform: rotate(-8deg);
     }
 
     .saved-tag {
@@ -1365,10 +1479,10 @@
 
         <div class="stack-overlay">
           <div class="save-list" aria-label="最近收藏内容">
-            <div class="save-item"><div class="thumb"></div><div>四级高频词 100 个</div><div class="saved-tag">已收藏</div></div>
-            <div class="save-item"><div class="thumb"></div><div>AI 帮你做学习计划</div><div class="saved-tag">已收藏</div></div>
-            <div class="save-item"><div class="thumb"></div><div>3 分钟肩颈拉伸</div><div class="saved-tag">已收藏</div></div>
-            <div class="save-item"><div class="thumb"></div><div>10 分钟番茄鸡蛋面</div><div class="saved-tag">已收藏</div></div>
+            <div class="save-item"><div class="thumb thumb-vocab"></div><div>四级高频词 100 个</div><div class="saved-tag">已收藏</div></div>
+            <div class="save-item"><div class="thumb thumb-plan"></div><div>AI 帮你做学习计划</div><div class="saved-tag">已收藏</div></div>
+            <div class="save-item"><div class="thumb thumb-stretch"></div><div>3 分钟肩颈拉伸</div><div class="saved-tag">已收藏</div></div>
+            <div class="save-item"><div class="thumb thumb-food"></div><div>10 分钟番茄鸡蛋面</div><div class="saved-tag">已收藏</div></div>
           </div>
 
           <div class="insight">
