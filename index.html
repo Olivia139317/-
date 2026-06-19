@@ -171,6 +171,18 @@
       white-space: nowrap;
     }
 
+    .top-tabs::before {
+      content: "";
+      position: absolute;
+      left: -16px;
+      right: -15px;
+      top: -48px;
+      height: 96px;
+      z-index: -1;
+      background: linear-gradient(180deg, rgba(0,0,0,.72), rgba(0,0,0,.46) 64%, transparent);
+      pointer-events: none;
+    }
+
     .hamburger,
     .search-icon {
       flex: 0 0 auto;
@@ -815,7 +827,7 @@
 
     .ai-card-wrap {
       position: absolute;
-      inset: 98px 14px 92px;
+      inset: 124px 14px 92px;
       z-index: 10;
       display: grid;
       align-items: end;
@@ -836,6 +848,7 @@
     .ai-card {
       position: relative;
       overflow: hidden;
+      max-height: 100%;
       padding: 18px 16px 16px;
       border-radius: 10px;
       border: 1px solid rgba(255,255,255,.16);
@@ -844,6 +857,18 @@
         var(--card);
       box-shadow: 0 24px 70px rgba(0,0,0,.52);
       backdrop-filter: blur(22px);
+    }
+
+    .feed[data-step="task"] .ai-card,
+    .feed[data-step="scenes"] .ai-card {
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      scrollbar-width: none;
+    }
+
+    .feed[data-step="task"] .ai-card::-webkit-scrollbar,
+    .feed[data-step="scenes"] .ai-card::-webkit-scrollbar {
+      display: none;
     }
 
     .ai-card::before {
@@ -954,6 +979,22 @@
     .feed[data-step="scenes"] .task-panel {
       display: block;
       animation: reveal 360ms var(--ease) both;
+    }
+
+    .feed[data-step="task"] .ai-kicker,
+    .feed[data-step="scenes"] .ai-kicker {
+      margin-bottom: 9px;
+    }
+
+    .feed[data-step="task"] .ai-main,
+    .feed[data-step="scenes"] .ai-main {
+      margin-bottom: 10px;
+    }
+
+    .feed[data-step="task"] .ai-reason,
+    .feed[data-step="scenes"] .ai-reason {
+      margin-bottom: 10px;
+      line-height: 1.5;
     }
 
     .task-title {
