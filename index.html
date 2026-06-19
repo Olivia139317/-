@@ -865,6 +865,31 @@
       transform: rotate(-8deg);
     }
 
+    .thumb-vocab,
+    .thumb-plan,
+    .thumb-stretch,
+    .thumb-food {
+      background-image: url("assets/saved-thumbs.webp");
+      background-size: 200% 200%;
+      background-color: #20232b;
+    }
+
+    .thumb-vocab { background-position: 0 0; }
+    .thumb-plan { background-position: 100% 0; }
+    .thumb-stretch { background-position: 0 100%; }
+    .thumb-food { background-position: 100% 100%; }
+
+    .thumb-vocab::before,
+    .thumb-vocab::after,
+    .thumb-plan::before,
+    .thumb-plan::after,
+    .thumb-stretch::before,
+    .thumb-stretch::after,
+    .thumb-food::before,
+    .thumb-food::after {
+      display: none;
+    }
+
     .saved-tag {
       color: var(--amber);
       font-size: 10px;
