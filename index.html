@@ -1557,7 +1557,7 @@
               </div>
               <div class="actions">
                 <button id="beginTask" class="pill-button primary" type="button">开始 5 分钟</button>
-                <button class="pill-button" type="button" data-action="word">换成单词任务</button>
+                <button id="alternateTask" class="pill-button" type="button" data-action="word">换成单词任务</button>
               </div>
             </div>
 
@@ -1617,6 +1617,8 @@
     const stepLabel = document.querySelector("#stepLabel");
     const stepCount = document.querySelector("#stepCount");
     const beginTask = document.querySelector("#beginTask");
+    const lighterButton = document.querySelector('[data-action="lighter"]');
+    const alternateTask = document.querySelector("#alternateTask");
     const sceneTabs = document.querySelectorAll("[data-scene]");
     const cardType = document.querySelector("#cardType");
     const cardTitle = document.querySelector("#cardTitle");
@@ -1627,6 +1629,7 @@
     const taskList = document.querySelector("#taskList");
     const taskChips = document.querySelector("#taskChips");
     let isAutoDemoRunning = false;
+    let currentScene = "cet";
 
     const steps = {
       video: { label: "普通信息流", index: 1, width: "18%" },
@@ -1648,7 +1651,11 @@
         reason: "你不是不努力，是每条视频都太像“完整计划”。今天先不背 100 个词，只做一个 5 分钟听力热身。",
         taskTitle: "今日小行动：5 分钟四级听力热身",
         tasks: ["听 30 秒短句，不暂停", "选出你听到的 3 个关键词", "AI 生成 3 个相似句，明天继续练"],
-        chips: ["预计 5 分钟", "难度低", "适合现在开始"]
+        chips: ["预计 5 分钟", "难度低", "适合现在开始"],
+        beginLabel: "开始 5 分钟",
+        alternateLabel: "换成单词任务",
+        lighterLabel: "换个更轻的",
+        lighterReason: "那就再轻一点：今天只听 15 秒短句，听不懂也没关系，先让耳朵进入状态。"
       },
       fitness: {
         type: "AI 信息流行动卡",
@@ -1661,7 +1668,11 @@
         reason: "今天不练完整套，先做 3 分钟肩颈拉伸。不是为了立刻变强，是让身体知道你开始了。",
         taskTitle: "今日小行动：3 分钟肩颈拉伸",
         tasks: ["坐直，慢慢转动肩膀 20 秒", "左右侧颈各拉伸 30 秒", "AI 明天帮你换一个低压力动作"],
-        chips: ["预计 3 分钟", "难度很低", "适合睡前"]
+        chips: ["预计 3 分钟", "难度很低", "适合睡前"],
+        beginLabel: "开始 3 分钟",
+        alternateLabel: "换成更轻动作",
+        lighterLabel: "换个更轻的",
+        lighterReason: "那就更轻一点：今天只做 30 秒肩膀绕环，不换衣服、不铺垫子，也算开始。"
       },
       food: {
         type: "AI 信息流行动卡",
@@ -1674,7 +1685,11 @@
         reason: "今天适合：番茄鸡蛋面。10 分钟、少洗碗、不容易翻车，还能把你最近收藏的做法用上。",
         taskTitle: "今日小行动：番茄鸡蛋面 3 步",
         tasks: ["番茄切块，鸡蛋打散", "先炒蛋再炒番茄，加水煮开", "下面，出锅前加盐和一点糖"],
-        chips: ["预计 10 分钟", "少洗碗", "不容易翻车"]
+        chips: ["预计 10 分钟", "少洗碗", "不容易翻车"],
+        beginLabel: "开始 10 分钟",
+        alternateLabel: "换成更省事做法",
+        lighterLabel: "换个更省事的",
+        lighterReason: "那就更省事一点：今晚只做热汤面版本，少切菜、少洗碗，先把晚饭定下来。"
       }
     };
 
@@ -1703,6 +1718,7 @@
 
     function renderScene(name) {
       if (!scenes[name]) return;
+      currentScene = name;
       const data = scenes[name];
       cardType.textContent = data.type;
       cardTitle.textContent = data.title;
@@ -1712,6 +1728,9 @@
       taskTitle.textContent = data.taskTitle;
       taskList.innerHTML = data.tasks.map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
       taskChips.innerHTML = data.chips.map((chip) => `<span class="chip">${chip}</span>`).join("");
+      beginTask.textContent = data.beginLabel;
+      lighterButton.textContent = data.lighterLabel;
+      alternateTask.textContent = data.alternateLabel;
       sceneTabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scene === name));
     }
 
@@ -1744,8 +1763,8 @@
       stopAutoDemo();
       if (button.dataset.action === "steps") setStep("task");
       if (button.dataset.action === "lighter") {
-        renderScene("cet");
-        cardReason.textContent = "那就再轻一点：今天只听 15 秒短句，听不懂也没关系，先让耳朵进入状态。";
+        renderScene(currentScene);
+        cardReason.textContent = scenes[currentScene].lighterReason;
         setStep("task");
       }
     });
