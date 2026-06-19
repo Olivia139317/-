@@ -423,9 +423,11 @@
       transition: opacity 260ms ease-out, transform 260ms ease-out;
     }
 
+    .feed[data-step="stack"] .caption,
     .feed[data-step="card"] .caption,
     .feed[data-step="task"] .caption,
     .feed[data-step="scenes"] .caption,
+    .feed[data-step="stack"] .rail,
     .feed[data-step="card"] .rail,
     .feed[data-step="task"] .rail,
     .feed[data-step="scenes"] .rail {
@@ -692,13 +694,23 @@
 
     .stack-overlay {
       position: absolute;
-      inset: 98px 16px 94px;
-      z-index: 7;
+      left: 14px;
+      right: 14px;
+      bottom: 88px;
+      z-index: 11;
+      max-height: 392px;
       display: grid;
-      align-content: end;
-      gap: 10px;
+      gap: 8px;
+      padding: 10px;
+      border-radius: 12px 12px 10px 10px;
+      border: 1px solid rgba(24,245,220,.28);
+      background:
+        linear-gradient(180deg, rgba(16,20,24,.88), rgba(7,8,11,.94)),
+        rgba(0,0,0,.72);
+      box-shadow: 0 -18px 54px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.08);
+      backdrop-filter: blur(18px);
       opacity: 0;
-      transform: translateY(18px);
+      transform: translateY(22px);
       pointer-events: none;
       transition: opacity 320ms ease-out, transform 320ms var(--ease);
     }
@@ -711,22 +723,31 @@
 
     .save-list {
       display: grid;
-      gap: 8px;
+      gap: 6px;
     }
 
     .save-item {
-      min-height: 47px;
+      min-height: 42px;
       display: grid;
-      grid-template-columns: 42px 1fr auto;
+      grid-template-columns: 34px minmax(0, 1fr) auto;
       align-items: center;
-      gap: 9px;
-      padding: 7px;
+      gap: 8px;
+      padding: 6px 7px;
       border-radius: 8px;
       border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.09);
+      background:
+        linear-gradient(90deg, rgba(255,255,255,.12), rgba(255,255,255,.05)),
+        rgba(255,255,255,.06);
       backdrop-filter: blur(16px);
       font-size: 12px;
+      font-weight: 850;
       animation: rise 520ms var(--ease) both;
+    }
+
+    .save-item > div:nth-child(2) {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
 
     .save-item:nth-child(2) { animation-delay: 80ms; }
@@ -734,7 +755,7 @@
     .save-item:nth-child(4) { animation-delay: 240ms; }
 
     .thumb {
-      height: 40px;
+      height: 34px;
       border-radius: 6px;
       background:
         linear-gradient(135deg, rgba(24,245,220,.45), rgba(255,53,110,.34)),
@@ -743,17 +764,15 @@
 
     .saved-tag {
       color: var(--amber);
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 850;
     }
 
     .insight {
-      padding: 15px;
-      border-radius: 8px;
-      background: rgba(8,8,11,.8);
-      border: 1px solid rgba(24,245,220,.34);
-      box-shadow: 0 18px 46px rgba(0,0,0,.38);
-      backdrop-filter: blur(18px);
+      padding: 12px;
+      border-radius: 10px;
+      background: rgba(0,0,0,.42);
+      border: 1px solid rgba(255,255,255,.1);
     }
 
     .insight-title {
@@ -761,16 +780,16 @@
       justify-content: space-between;
       gap: 10px;
       color: var(--cyan);
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 950;
-      margin-bottom: 11px;
+      margin-bottom: 8px;
     }
 
     .insight-copy {
-      margin: 0 0 12px;
+      margin: 0 0 10px;
       color: #f3f5f8;
-      font-size: 18px;
-      line-height: 1.42;
+      font-size: 15px;
+      line-height: 1.35;
       font-weight: 900;
     }
 
@@ -781,17 +800,17 @@
     }
 
     .stat {
-      min-height: 54px;
+      min-height: 44px;
       display: grid;
       align-content: center;
       gap: 2px;
-      padding: 8px 6px;
+      padding: 6px 5px;
       border-radius: 7px;
       background: rgba(255,255,255,.08);
       text-align: center;
     }
 
-    .stat strong { font-size: 20px; }
+    .stat strong { font-size: 18px; }
     .stat span { color: var(--muted); font-size: 10px; }
 
     .ai-card-wrap {
