@@ -1099,6 +1099,11 @@
       font-weight: 950;
     }
 
+    .pill-button.demo-tap {
+      animation: demo-tap 520ms var(--ease) both;
+      box-shadow: 0 0 0 7px rgba(24,245,220,.12);
+    }
+
     .task-panel {
       display: none;
       margin-top: 14px;
@@ -1358,6 +1363,13 @@
     @keyframes card-arrive {
       from { transform: translateY(18px) scale(.985); }
       to { transform: translateY(0) scale(1); }
+    }
+
+    @keyframes demo-tap {
+      0% { transform: scale(1); }
+      35% { transform: scale(.96); }
+      70% { transform: scale(1.025); }
+      100% { transform: scale(1); }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1637,6 +1649,7 @@
     const stepLabel = document.querySelector("#stepLabel");
     const stepCount = document.querySelector("#stepCount");
     const beginTask = document.querySelector("#beginTask");
+    const stepsButton = document.querySelector('[data-action="steps"]');
     const lighterButton = document.querySelector('[data-action="lighter"]');
     const alternateTask = document.querySelector("#alternateTask");
     const sceneTabs = document.querySelectorAll("[data-scene]");
@@ -1736,6 +1749,13 @@
       saveLabel.textContent = isSaved ? "已收藏" : "2.5万";
     }
 
+    function pulseDemoTap(button) {
+      button.classList.remove("demo-tap");
+      void button.offsetWidth;
+      button.classList.add("demo-tap");
+      setActionTimeout(() => button.classList.remove("demo-tap"), 560);
+    }
+
     function renderScene(name) {
       if (!scenes[name]) return;
       currentScene = name;
@@ -1793,7 +1813,6 @@
       stopAutoDemo();
       beginTask.textContent = "已开始";
       showToast("不用完成一整套计划，今天先让自己动起来。");
-      setActionTimeout(() => setStep("scenes"), 700);
     });
 
     document.querySelector("[data-action='word']").addEventListener("click", () => {
@@ -1824,6 +1843,8 @@
       isAutoDemoRunning = false;
       clearDemoTimers();
       clearActionTimers();
+      stepsButton.classList.remove("demo-tap");
+      beginTask.classList.remove("demo-tap");
       autoDemo.classList.remove("primary");
     }
 
@@ -1843,15 +1864,23 @@
       }, 1100);
       runAutoDemo.t2 = window.setTimeout(() => setStep("stack"), 2800);
       runAutoDemo.t3 = window.setTimeout(() => setStep("card"), 6400);
-      runAutoDemo.t4 = window.setTimeout(() => setStep("task"), 10400);
-      runAutoDemo.t5 = window.setTimeout(() => setStep("scenes"), 14600);
-      runAutoDemo.t6 = window.setTimeout(() => renderScene("fitness"), 16400);
+      runAutoDemo.t4 = window.setTimeout(() => {
+        pulseDemoTap(stepsButton);
+        showToast("拆小一点，今天只先做 5 分钟。");
+      }, 9800);
+      runAutoDemo.t5 = window.setTimeout(() => setStep("task"), 10400);
+      runAutoDemo.t6 = window.setTimeout(() => {
+        pulseDemoTap(beginTask);
+        beginTask.textContent = "已开始";
+      }, 13900);
       runAutoDemo.t7 = window.setTimeout(() => {
-        renderScene("food");
         showToast("收藏不是终点。这一次，刷到就先做一小步。");
+        stepLabel.textContent = "刷到就先做一小步";
+        stepCount.textContent = "完成";
+        barFill.style.width = "100%";
         isAutoDemoRunning = false;
         autoDemo.classList.remove("primary");
-      }, 18400);
+      }, 14800);
     }
 
     autoDemo.addEventListener("click", runAutoDemo);
