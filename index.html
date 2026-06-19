@@ -1687,6 +1687,9 @@
         chips: ["预计 5 分钟", "难度低", "适合现在开始"],
         beginLabel: "开始 5 分钟",
         alternateLabel: "换成单词任务",
+        alternateTitle: "今日小行动：4 个四级高频词",
+        alternateTasks: ["听一遍单词发音", "选 1 个词造句", "AI 帮你生成同义替换"],
+        alternateToast: "已换成更轻的单词任务",
         lighterLabel: "换个更轻的",
         lighterReason: "那就再轻一点：今天只听 15 秒短句，听不懂也没关系，先让耳朵进入状态。"
       },
@@ -1704,6 +1707,9 @@
         chips: ["预计 3 分钟", "难度很低", "适合睡前"],
         beginLabel: "开始 3 分钟",
         alternateLabel: "换成更轻动作",
+        alternateTitle: "今日小行动：30 秒肩膀绕环",
+        alternateTasks: ["坐直，双肩自然下沉", "向后慢慢绕肩 10 次", "放下手机，深呼吸 3 次"],
+        alternateToast: "已换成 30 秒轻动作",
         lighterLabel: "换个更轻的",
         lighterReason: "那就更轻一点：今天只做 30 秒肩膀绕环，不换衣服、不铺垫子，也算开始。"
       },
@@ -1721,6 +1727,9 @@
         chips: ["预计 10 分钟", "少洗碗", "不容易翻车"],
         beginLabel: "开始 10 分钟",
         alternateLabel: "换成更省事做法",
+        alternateTitle: "今日小行动：热汤面 3 步",
+        alternateTasks: ["水烧开，下面条", "加一点盐和酱油调味", "打一个鸡蛋，出锅"],
+        alternateToast: "已换成更省事的热汤面",
         lighterLabel: "换个更省事的",
         lighterReason: "那就更省事一点：今晚只做热汤面版本，少切菜、少洗碗，先把晚饭定下来。"
       }
@@ -1817,9 +1826,10 @@
 
     document.querySelector("[data-action='word']").addEventListener("click", () => {
       stopAutoDemo();
-      taskTitle.textContent = "今日小行动：4 个四级高频词";
-      taskList.innerHTML = ["听一遍单词发音", "选 1 个词造句", "AI 帮你生成同义替换"].map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
-      showToast("已换成更轻的单词任务");
+      const data = scenes[currentScene];
+      taskTitle.textContent = data.alternateTitle;
+      taskList.innerHTML = data.alternateTasks.map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
+      showToast(data.alternateToast);
     });
 
     controls.forEach((button) => {
