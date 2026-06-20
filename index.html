@@ -1162,6 +1162,11 @@
       gap: 8px;
     }
 
+    .feed[data-step="task"] #cardActions,
+    .feed[data-step="scenes"] #cardActions {
+      display: none;
+    }
+
     .pill-button {
       width: 100%;
       min-height: 42px;
@@ -1194,9 +1199,14 @@
 
     .task-panel {
       display: none;
-      margin-top: 14px;
-      padding-top: 14px;
-      border-top: 1px solid rgba(255,255,255,.12);
+      margin-top: 12px;
+      padding: 12px;
+      border: 1px solid rgba(24,245,220,.22);
+      border-radius: 10px;
+      background:
+        linear-gradient(180deg, rgba(24,245,220,.08), rgba(255,255,255,.045)),
+        rgba(0,0,0,.22);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
     }
 
     .feed[data-step="task"] .task-panel,
@@ -1217,13 +1227,34 @@
 
     .feed[data-step="task"] .ai-reason,
     .feed[data-step="scenes"] .ai-reason {
+      margin-bottom: 0;
+      font-size: 12px;
+      line-height: 1.45;
+    }
+
+    .task-bridge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
       margin-bottom: 10px;
-      line-height: 1.5;
+      color: var(--cyan);
+      font-size: 12px;
+      font-weight: 950;
+    }
+
+    .task-bridge::before {
+      content: "";
+      width: 18px;
+      height: 18px;
+      flex: 0 0 auto;
+      border-radius: 50%;
+      background: conic-gradient(from 130deg, var(--cyan), var(--red), var(--cyan));
+      box-shadow: 0 0 16px rgba(24,245,220,.22);
     }
 
     .task-title {
-      margin: 0 0 10px;
-      font-size: 17px;
+      margin: 0 0 9px;
+      font-size: 16px;
       line-height: 1.3;
       font-weight: 950;
     }
@@ -1241,9 +1272,12 @@
       grid-template-columns: 27px 1fr;
       align-items: center;
       gap: 8px;
-      min-height: 34px;
+      min-height: 32px;
+      padding: 6px 8px;
+      border-radius: 8px;
       color: #eef1f5;
       font-size: 12px;
+      background: rgba(255,255,255,.055);
     }
 
     .step-num {
@@ -1261,7 +1295,7 @@
       display: flex;
       flex-wrap: wrap;
       gap: 6px;
-      margin-bottom: 11px;
+      margin-bottom: 10px;
     }
 
     .chip {
@@ -1668,6 +1702,7 @@
             </div>
 
             <div class="task-panel" id="taskPanel">
+              <div class="task-bridge">AI 已把收藏内容拆成一个现在能开始的小行动</div>
               <h2 class="task-title" id="taskTitle">今日小行动：5 分钟四级听力热身</h2>
               <ul class="task-list" id="taskList">
                 <li><span class="step-num">1</span><span>听 30 秒短句，不暂停</span></li>
@@ -1968,7 +2003,7 @@
       runAutoDemo.t3 = window.setTimeout(() => setStep("card"), 6400);
       runAutoDemo.t4 = window.setTimeout(() => {
         pulseDemoTap(stepsButton);
-        showToast("拆小一点，今天只先做 5 分钟。");
+        showToast("AI 正在把收藏内容拆成 3 步。");
       }, 9800);
       runAutoDemo.t5 = window.setTimeout(() => setStep("task"), 10400);
       runAutoDemo.t6 = window.setTimeout(() => {
