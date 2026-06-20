@@ -1919,6 +1919,7 @@
           "今天先从 5 分钟听力开始。"
         ],
         reason: "不用打开完整计划。AI 已根据近期收藏，整理出一个可立即执行的练习任务。",
+        taskBridge: "已根据近期收藏生成练习任务",
         taskTitle: "当前任务：5 分钟四级听力热身",
         tasks: ["听 30 秒短句，不暂停", "选出你听到的 3 个关键词", "生成 3 个相似句，用于下次练习"],
         chips: ["预计 5 分钟", "难度低", "立即执行"],
@@ -1937,6 +1938,7 @@
           "近期观看时间集中在晚间。"
         ],
         reason: "根据时间与收藏内容，推荐先完成 3 分钟肩颈拉伸，降低开始成本。",
+        taskBridge: "已根据近期收藏生成训练任务",
         taskTitle: "当前任务：3 分钟肩颈拉伸",
         tasks: ["坐直，慢慢转动肩膀 20 秒", "左右侧颈各拉伸 30 秒", "记录完成情况，用于下次推荐"],
         chips: ["预计 3 分钟", "难度很低", "适合睡前"],
@@ -1955,6 +1957,7 @@
           "系统匹配到适合今晚的简化方案。"
         ],
         reason: "推荐番茄鸡蛋面：用时短、步骤少、容错率高，适合直接执行。",
+        taskBridge: "已根据近期收藏生成做饭任务",
         taskTitle: "当前任务：番茄鸡蛋面 3 步",
         tasks: ["番茄切块，鸡蛋打散", "先炒蛋再炒番茄，加水煮开", "下面，出锅前加盐和一点糖"],
         chips: ["预计 10 分钟", "少洗碗", "不容易翻车"],
@@ -2013,7 +2016,7 @@
     function renderTask() {
       const data = scenes[currentScene];
 
-      taskBridge.textContent = "已根据近期收藏生成练习任务";
+      taskBridge.textContent = data.taskBridge;
       taskTitle.textContent = data.taskTitle;
       taskList.innerHTML = data.tasks.map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
       taskChips.innerHTML = data.chips.map((chip) => `<span class="chip">${chip}</span>`).join("");
