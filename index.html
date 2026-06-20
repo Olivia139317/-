@@ -1809,7 +1809,6 @@
             <p class="ai-reason" id="cardReason">你不是不努力，是每条视频都太像“完整计划”。今天先不背 100 个词，只做一个 5 分钟听力热身。</p>
             <div class="actions" id="cardActions">
               <button class="pill-button primary" type="button" data-action="steps">拆成 3 步</button>
-              <button class="pill-button" type="button" data-action="lighter">换个更轻的</button>
             </div>
 
             <div class="task-panel" id="taskPanel">
@@ -1888,7 +1887,6 @@
     const stepCount = document.querySelector("#stepCount");
     const beginTask = document.querySelector("#beginTask");
     const stepsButton = document.querySelector('[data-action="steps"]');
-    const lighterButton = document.querySelector('[data-action="lighter"]');
     const alternateTask = document.querySelector("#alternateTask");
     const sceneTabs = document.querySelectorAll("[data-scene]");
     const cardType = document.querySelector("#cardType");
@@ -1928,14 +1926,7 @@
         alternateLabel: "换成单词任务",
         alternateTitle: "今日小行动：4 个四级高频词",
         alternateTasks: ["听一遍单词发音", "选 1 个词造句", "AI 帮你生成同义替换"],
-        alternateToast: "已换成更轻的单词任务",
-        lighterLabel: "换个更轻的",
-        lighterReason: "那就再轻一点：今天只听 15 秒短句，听不懂也没关系，先让耳朵进入状态。",
-        lighterBridge: "AI 已切到最低压力版本：先开始，不追求完成",
-        lighterTitle: "超轻开始：15 秒听力唤醒",
-        lighterTasks: ["戴上耳机，只听 15 秒", "听到 1 个熟悉的词就停", "把这条留给明天继续"],
-        lighterChips: ["只要 15 秒", "不计正确率", "现在就能做"],
-        lighterBeginLabel: "开始 15 秒"
+        alternateToast: "已换成更轻的单词任务"
       },
       fitness: {
         type: "AI 信息流行动卡",
@@ -1953,14 +1944,7 @@
         alternateLabel: "换成更轻动作",
         alternateTitle: "今日小行动：30 秒肩膀绕环",
         alternateTasks: ["坐直，双肩自然下沉", "向后慢慢绕肩 10 次", "放下手机，深呼吸 3 次"],
-        alternateToast: "已换成 30 秒轻动作",
-        lighterLabel: "换个更轻的",
-        lighterReason: "那就更轻一点：今天只做 30 秒肩膀绕环，不换衣服、不铺垫子，也算开始。",
-        lighterBridge: "AI 已切到最低压力版本：不换衣服，也算开始",
-        lighterTitle: "超轻开始：30 秒肩膀绕环",
-        lighterTasks: ["坐直，把肩膀放松", "向后绕肩 10 次", "深呼吸 3 次就结束"],
-        lighterChips: ["只要 30 秒", "不用器械", "适合睡前"],
-        lighterBeginLabel: "开始 30 秒"
+        alternateToast: "已换成 30 秒轻动作"
       },
       food: {
         type: "AI 信息流行动卡",
@@ -1978,14 +1962,7 @@
         alternateLabel: "换成更省事做法",
         alternateTitle: "今日小行动：热汤面 3 步",
         alternateTasks: ["水烧开，下面条", "加一点盐和酱油调味", "打一个鸡蛋，出锅"],
-        alternateToast: "已换成更省事的热汤面",
-        lighterLabel: "换个更省事的",
-        lighterReason: "那就更省事一点：今晚只做热汤面版本，少切菜、少洗碗，先把晚饭定下来。",
-        lighterBridge: "AI 已切到最低压力版本：先把晚饭定下来",
-        lighterTitle: "超轻开始：热汤面版本",
-        lighterTasks: ["先把水烧上", "放面和一个鸡蛋", "加盐和酱油，出锅"],
-        lighterChips: ["少洗碗", "少切菜", "不容易翻车"],
-        lighterBeginLabel: "开始热汤面"
+        alternateToast: "已换成更省事的热汤面"
       }
     };
 
@@ -2028,26 +2005,19 @@
       cardSubtitle.textContent = data.subtitle;
       cardMain.innerHTML = data.main.map((line) => `<div>${line}</div>`).join("");
       cardReason.textContent = data.reason;
-      renderTaskVariant("steps");
-      lighterButton.textContent = data.lighterLabel;
+      renderTask();
       alternateTask.textContent = data.alternateLabel;
       sceneTabs.forEach((tab) => tab.classList.toggle("active", tab.dataset.scene === name));
     }
 
-    function renderTaskVariant(variant) {
+    function renderTask() {
       const data = scenes[currentScene];
-      const isLighter = variant === "lighter";
-      const title = isLighter ? data.lighterTitle : data.taskTitle;
-      const tasks = isLighter ? data.lighterTasks : data.tasks;
-      const chips = isLighter ? data.lighterChips : data.chips;
 
-      taskBridge.textContent = isLighter
-        ? data.lighterBridge
-        : "AI 已把收藏内容拆成一个现在能开始的小行动";
-      taskTitle.textContent = title;
-      taskList.innerHTML = tasks.map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
-      taskChips.innerHTML = chips.map((chip) => `<span class="chip">${chip}</span>`).join("");
-      beginTask.textContent = isLighter ? data.lighterBeginLabel : data.beginLabel;
+      taskBridge.textContent = "AI 已把收藏内容拆成一个现在能开始的小行动";
+      taskTitle.textContent = data.taskTitle;
+      taskList.innerHTML = data.tasks.map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
+      taskChips.innerHTML = data.chips.map((chip) => `<span class="chip">${chip}</span>`).join("");
+      beginTask.textContent = data.beginLabel;
     }
 
     const actionTimers = new Set();
@@ -2078,14 +2048,7 @@
       if (!button) return;
       stopAutoDemo();
       if (button.dataset.action === "steps") {
-        renderTaskVariant("steps");
-        setStep("task");
-      }
-      if (button.dataset.action === "lighter") {
-        renderScene(currentScene);
-        cardReason.textContent = scenes[currentScene].lighterReason;
-        renderTaskVariant("lighter");
-        showToast("已换成一个更轻的开始");
+        renderTask();
         setStep("task");
       }
     });
