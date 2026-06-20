@@ -1784,7 +1784,7 @@
               <span>最近收藏</span>
               <span>以后再看</span>
             </div>
-            <p class="insight-copy">近期收藏持续增加，但尚未形成具体行动。</p>
+            <p class="insight-copy">收藏了很多内容，但还没有真正开始。</p>
             <div class="stats">
               <div class="stat"><strong>18</strong><span>四级</span></div>
               <div class="stat"><strong>7</strong><span>AI学习</span></div>
@@ -1801,18 +1801,18 @@
               <span class="live-dot" aria-hidden="true"></span>
             </div>
             <h1 id="cardTitle">别再收藏了</h1>
-            <p class="ai-subtitle" id="cardSubtitle">将收藏内容转化为当前可执行任务</p>
+            <p class="ai-subtitle" id="cardSubtitle">把收藏内容变成今天能做的一步</p>
             <div class="ai-main" id="cardMain">
               <div>你最近收藏了 <em>18 条四级攻略</em>。</div>
-              <div>系统检测到尚未形成练习记录。</div>
+              <div>今天先从 5 分钟听力开始。</div>
             </div>
-            <p class="ai-reason" id="cardReason">收藏内容已聚合为一个低门槛任务：不启动完整计划，先完成 5 分钟听力热身。</p>
+            <p class="ai-reason" id="cardReason">不用打开完整计划。AI 已根据近期收藏，整理出一个可立即执行的练习任务。</p>
             <div class="actions" id="cardActions">
               <button class="pill-button primary" type="button" data-action="steps">拆成 3 步</button>
             </div>
 
             <div class="task-panel" id="taskPanel">
-              <div class="task-bridge" id="taskBridge">已根据收藏内容生成当前任务</div>
+              <div class="task-bridge" id="taskBridge">已根据近期收藏生成练习任务</div>
               <h2 class="task-title" id="taskTitle">当前任务：5 分钟四级听力热身</h2>
               <ul class="task-list" id="taskList">
                 <li><span class="step-num">1</span><span>听 30 秒短句，不暂停</span></li>
@@ -1913,12 +1913,12 @@
       cet: {
         type: "AI 信息流行动卡",
         title: "别再收藏了",
-        subtitle: "将收藏内容转化为当前可执行任务",
+        subtitle: "把收藏内容变成今天能做的一步",
         main: [
           "你最近收藏了 <em>18 条四级攻略</em>。",
-          "系统检测到尚未形成练习记录。"
+          "今天先从 5 分钟听力开始。"
         ],
-        reason: "收藏内容已聚合为一个低门槛任务：不启动完整计划，先完成 5 分钟听力热身。",
+        reason: "不用打开完整计划。AI 已根据近期收藏，整理出一个可立即执行的练习任务。",
         taskTitle: "当前任务：5 分钟四级听力热身",
         tasks: ["听 30 秒短句，不暂停", "选出你听到的 3 个关键词", "生成 3 个相似句，用于下次练习"],
         chips: ["预计 5 分钟", "难度低", "立即执行"],
@@ -2013,7 +2013,7 @@
     function renderTask() {
       const data = scenes[currentScene];
 
-      taskBridge.textContent = "已根据收藏内容生成当前任务";
+      taskBridge.textContent = "已根据近期收藏生成练习任务";
       taskTitle.textContent = data.taskTitle;
       taskList.innerHTML = data.tasks.map((task, index) => `<li><span class="step-num">${index + 1}</span><span>${task}</span></li>`).join("");
       taskChips.innerHTML = data.chips.map((chip) => `<span class="chip">${chip}</span>`).join("");
