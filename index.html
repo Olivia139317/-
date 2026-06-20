@@ -345,6 +345,15 @@
 
     .save-card {
       min-height: 270px;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(24,245,220,.18), transparent 30%),
+        radial-gradient(circle at 82% 78%, rgba(255,53,110,.16), transparent 34%),
+        linear-gradient(145deg, rgba(12,23,35,.96), rgba(4,8,13,.92));
+      border-color: rgba(24,245,220,.22);
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,.12),
+        0 0 0 1px rgba(24,245,220,.08),
+        0 18px 46px rgba(0,0,0,.28);
     }
 
     .teacher-card::before,
@@ -357,6 +366,32 @@
       height: 168px;
       border: 1px solid rgba(24,245,220,.35);
       transform: rotate(22deg);
+    }
+
+    .save-card::before {
+      right: 18px;
+      top: 18px;
+      width: 94px;
+      height: 94px;
+      border-radius: 18px;
+      border-color: rgba(255,255,255,.14);
+      background:
+        linear-gradient(90deg, rgba(24,245,220,.0), rgba(24,245,220,.5), rgba(24,245,220,.0)),
+        repeating-linear-gradient(180deg, rgba(255,255,255,.12) 0 2px, transparent 2px 14px);
+      opacity: .72;
+      transform: rotate(0deg);
+    }
+
+    .save-card::after {
+      content: "";
+      position: absolute;
+      right: 24px;
+      top: 56px;
+      width: 84px;
+      height: 2px;
+      border-radius: 999px;
+      background: var(--cyan);
+      box-shadow: 0 0 14px rgba(24,245,220,.85);
     }
 
     .video-badge {
@@ -381,6 +416,16 @@
     }
 
     .video-title span { color: var(--cyan); }
+
+    .save-card .video-title {
+      max-width: 210px;
+      font-size: 34px;
+      letter-spacing: 0;
+    }
+
+    .save-card .video-title span {
+      color: #fff;
+    }
 
     .subtitle {
       max-width: 230px;
@@ -431,6 +476,49 @@
       font-size: 11px;
       font-weight: 800;
       line-height: 1.15;
+    }
+
+    .plan-preview {
+      position: absolute;
+      left: 22px;
+      right: 22px;
+      bottom: 18px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .plan-bar {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
+      overflow: hidden;
+    }
+
+    .plan-bar span {
+      display: block;
+      width: 68%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, var(--cyan), var(--red));
+    }
+
+    .plan-chips {
+      display: flex;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .plan-chips span {
+      min-height: 28px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 9px;
+      border-radius: 999px;
+      color: rgba(255,255,255,.9);
+      background: rgba(255,255,255,.1);
+      border: 1px solid rgba(255,255,255,.1);
+      font-size: 11px;
+      font-weight: 850;
     }
 
     .caption {
@@ -1467,9 +1555,13 @@
               <div class="video-badge">继续刷到的内容</div>
               <h1 class="video-title">AI 学习<br><span>计划</span>生成器</h1>
               <p class="subtitle">收藏越来越多，开始还是有点远。</p>
-              <div class="floating-words">
-                <div class="word-row"><span>7 天计划</span><strong>先收藏</strong></div>
-                <div class="word-row"><span>高频词表</span><strong>明天再看</strong></div>
+              <div class="plan-preview" aria-hidden="true">
+                <div class="plan-bar"><span></span></div>
+                <div class="plan-chips">
+                  <span>7 天计划</span>
+                  <span>高频词表</span>
+                  <span>AI 生成</span>
+                </div>
               </div>
             </div>
           </div>
